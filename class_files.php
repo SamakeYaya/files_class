@@ -1,16 +1,38 @@
 <?php
+
+/**
+ * Class our gerer les fichier
+ */
 class GestionnaireFichiers
 {
+    /**
+     * Undocumented variable
+     *
+     * @var [type] string $dossier: le dossier a creer
+     * @var [type] string $db: base de donnees
+     */
     private $dossier;
     private $db;
 
+    /**
+     * Le constructeur de ma class GestionnaireFichiers
+     *
+     * @param [type] $dossier: le nom du dossier a creer
+     * @param [type] $dsn : nom de server et base de donne
+     * @param [type] $username: nom de l'utilisateur
+     * @param [type] $password: Le mdp pour acceder a la base de donnees
+     */
     public function __construct($dossier, $dsn, $username, $password)
     {
         $this->dossier = $dossier;
         $this->db = new PDO($dsn, $username, $password);
         $this->creerDossier();
     }
-
+    /**
+     * fonction permettant de creer le dossier
+     *
+     * @return void
+     */
     private function creerDossier()
     {
         // Crée le dossier s'il n'existe pas déjà
@@ -18,7 +40,14 @@ class GestionnaireFichiers
             mkdir($this->dossier);
         }
     }
-
+    /**
+     * enregistrer un fichier
+     *
+     * @param [type] $nom_fichier
+     * @param [type] $contenu_fichier
+     * @param [type] $file_type
+     * @return void
+     */
     public function enregistrerFichier($nom_fichier, $contenu_fichier, $file_type)
     {
         // Liste des types de fichiers autorises
@@ -50,7 +79,12 @@ class GestionnaireFichiers
 
         return $nom_unique;
     }
-
+    /**
+     * enregistre un fichier dans la base de donnees
+     *
+     * @param [type] $unique
+     * @return void
+     */
     private function enregistreDansBase($unique)
     {
         $query = $this->db->prepare("INSERT INTO fichier (nom)VALUES (:nom)");
@@ -61,7 +95,12 @@ class GestionnaireFichiers
         ];
         $query->execute($data);
     }
-
+    /**
+     * Supprime un fichier
+     *
+     * @param [type] $nom_fichier
+     * @return void
+     */
     public function supprimerFichier($nom_fichier)
     {
         // Supprime le fichier du dossier
